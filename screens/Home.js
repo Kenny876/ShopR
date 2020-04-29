@@ -7,6 +7,7 @@ import AddListModal from "../components/AddListModal";
 import { FlatList } from 'react-native-gesture-handler';
 import GroceryList from "../components/GroceryList";
 import Icon from 'react-native-vector-icons/Ionicons';
+import Fire from '../Fire';
 
 Icon.loadFont();
 
@@ -16,6 +17,9 @@ export default class Home extends Component {
         displayName:"",
         addTodoVisible:false,
         lists: Data
+        
+
+        
     };
 
     toggleAddTodoModal() {
@@ -45,8 +49,10 @@ export default class Home extends Component {
     componentDidMount(){
         const {email, displayName} = firebase.auth().currentUser;
 
-        this.setState({email, displayName});
-    }
+        this.setState({email, displayName})
+}
+
+    
 
     render() {
         return(

@@ -26,8 +26,12 @@ var firebaseConfig = {
   appId: "1:303548181587:web:7c0d2fe1691165ad2eaaa6",
   measurementId: "G-1KW8SVEJJF"
 };
+
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
+
+if (!firebase.apps.length){
+  firebase.initializeApp(firebaseConfig);
+      }
 
 const AppTabNavigator = createBottomTabNavigator (
   {
@@ -63,3 +67,5 @@ export default createAppContainer (
   }
   )
 );
+
+
