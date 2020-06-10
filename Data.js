@@ -12,7 +12,7 @@ export default Data = [
 
         {
             title: "Oil",
-            completed: true
+            completed: false
         }
     ]
     }

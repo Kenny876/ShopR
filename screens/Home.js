@@ -80,6 +80,7 @@ export default class Home extends Component {
                     data = {this.state.lists} 
                     keyExtractor ={item => item.listname}
                     renderItem={({item}) => this.renderList(item)}
+                    keyboardShouldPersistTaps = "always"
                             />
                         
                         </View>  

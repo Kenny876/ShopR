@@ -1,7 +1,9 @@
 import React, { Component } from "react";
-import {View, Text, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,KeyboardAvoidingView,TextInput,Keyboard} from "react-native";
+import {View, Text, StyleSheet,SafeAreaView,TouchableOpacity,FlatList,KeyboardAvoidingView,TextInput,Keyboard,Animated} from "react-native";
 import { Ionicons } from '@expo/vector-icons';
 import Icon from 'react-native-vector-icons/Ionicons';
+import {Swipeable} from 'react-native-gesture-handler';
+import { Colors } from "react-native/Libraries/NewAppScreen";
 
 Icon.loadFont();
 
@@ -27,10 +29,18 @@ export default class GroceryListModal extends Component {
         Keyboard.dismiss();
     }
 
+    deleteTodo = index => {
+        let list = this.props.list
+        list.todos.splice(index, 1)
+
+        this.props.updateList(list);
+    }
+
 
 
     renderTodo = (todo, index)=> {
         return (
+            <Swipeable renderRightActions={(_, dragX) => this.rightActions(dragX, index)}>
             <View style= {styles.groceryContainer}>
                 <TouchableOpacity onPress={()=> this.toggleTodoCompleted(index)}>
                     <Icon 
@@ -45,10 +55,38 @@ export default class GroceryListModal extends Component {
                 {textDecorationLine: todo.completed ? "line-through" : "none",
                 color: todo.completed ? "grey" :"black" }
                 ]}  >
-                {todo.title} </Text>
+                {todo.title}
+                 </Text>
             </View>
+            </Swipeable>
         );
     };
+
+        rightActions = (dragX,index) => {
+            const scale = dragX.interpolate ({
+                inputRange: [-100,-20,0],
+                outputRange: [1,0.9,0],
+                extrapolate: "clamp"
+            })
+
+            const opacity = dragX.interpolate ({
+                inputRange: [-100,0],
+                outputRange: [1,0.9],
+                extrapolate: "clamp"
+            })
+
+
+            return (
+                <TouchableOpacity onPress= {()=> this.deleteTodo (index)}>
+                    <Animated.View style ={styles.deleteButton}>
+                       <Animated.Text style = {{color: "white", fontWeight: "800", transform:[{scale}] }}>
+                       Delete
+                       </Animated.Text>
+                            
+                    </Animated.View>
+                </TouchableOpacity>
+            );
+        };
     // 
     render () {
             const list = this.props.list
@@ -75,6 +113,8 @@ export default class GroceryListModal extends Component {
                 </View>
                 </View>
 
+                
+
                 <View style = {[styles.section, {flex: 3}]}>
                     <FlatList 
                     data={list.todos}
@@ -87,7 +127,8 @@ export default class GroceryListModal extends Component {
                 <TextInput style={styles.input} 
                 onChangeText= {text => this.setState ({newTodo: text})} 
                 value={this.state.newTodo} 
-                placeholder="Enter Name of Item"/>
+                placeholder="Enter Name of Item"
+                keyboardS/>
 
                 <TouchableOpacity style={styles.addGrocery} onPress={() => this.addTodo()}>
                     <Text style={styles.addButton}>Add</Text>
@@ -107,14 +148,14 @@ const styles = StyleSheet.create ({
         alignItems:"center"
     },
     section: {
-        flex:1,
         alignSelf: 'stretch'
     },
     header:{
         justifyContent: "flex-end",
         marginLeft:64,
         borderBottomWidth:3,
-        borderBottomColor:'#CC2D6F'
+        borderBottomColor:'#CC2D6F',
+        paddingTop: 16
     },
     title: {
         fontSize:28,
@@ -129,7 +170,8 @@ const styles = StyleSheet.create ({
      footer: {
          paddingHorizontal: 32,
          flexDirection: "row",
-         alignItems: "center"
+         alignItems: "center",
+         paddingVertical: 16
      },
      input: {
          flex:1,
@@ -154,7 +196,8 @@ const styles = StyleSheet.create ({
      groceryContainer: {
          paddingVertical: 16,
          flexDirection:"row",
-         alignItems: "center"
+         alignItems: "center",
+         paddingLeft: 32
      },
      close: {
         fontSize: 18,
@@ -163,6 +206,17 @@ const styles = StyleSheet.create ({
     items: {
         color:'black',
         fontWeight:'600'
+    },
+    deleteButton:{
+        flex:1,
+        backgroundColor: 'red',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 60,
+    },
+    deleteText:{
+        
+       
     }
     
 });

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useReducer} from 'react';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import { createBottomTabNavigator } from "react-navigation-tabs";
@@ -6,6 +6,7 @@ import Loading from './screens/Loading';
 import Login from './screens/Login';
 import Register from './screens/Register';
 import Home from './screens/Home';
+import Search from './screens/Search';
 import Profile from './screens/Profile';
 import Icon from 'react-native-vector-icons/Ionicons';
 
@@ -14,7 +15,6 @@ Icon.loadFont();
 
 import * as firebase from 'firebase';
 import { Ionicons } from '@expo/vector-icons';
-
 
 var firebaseConfig = {
   apiKey: "AIzaSyD-cR2UZqDDHPbVoMwzNAYYN5KrT2ObrQ8",
@@ -33,8 +33,18 @@ if (!firebase.apps.length){
   firebase.initializeApp(firebaseConfig);
       }
 
+
+
 const AppTabNavigator = createBottomTabNavigator (
   {
+
+    QuickSearch : {
+      screen: Search,
+      navigationOptions: {
+        tabBarIcon: ({ tintColor }) => <Icon name="ios-search" size={24} color={tintColor} />
+      } 
+     },
+
     Home: {
     screen: Home,
       navigationOptions: {
@@ -46,8 +56,11 @@ const AppTabNavigator = createBottomTabNavigator (
       screen: Profile,
       navigationOptions: {
         tabBarIcon: ({ tintColor }) => <Icon name="ios-person" size={24} color={tintColor} />
-      }
-  }
+      } 
+     },
+
+    
+
 });
 
 const AuthStack = createStackNavigator({
